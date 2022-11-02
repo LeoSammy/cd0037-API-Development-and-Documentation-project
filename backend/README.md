@@ -310,14 +310,89 @@ ___
     - Creates a new question and adds to the database which requires the question and answer text,
     category, and difficulty score. Returns the id of the created question, success value, total books, and book list based on current page number to update the frontend.
 
-  - `curl -X POST -H "Content-Type: application/json"  -d '{"question":"What languages are officially spoken in cameroon", "answer":"French and English", "category":"4", "difficulty":"Easy"}'  http://127.0.0.1:5000/questions`
+  - `curl -X POST -H "Content-Type: application/json"  -d '{"question":"What languages are officially spoken in cameroon", "answer":"French and English", "category":"3", "difficulty":4}'  http://127.0.0.1:5000/questions`
+
+  
 
   ```  
   {
-    "error": "422", 
-    "message": "Unprocessable", 
-    "success": false
-  }
+  "created": 132, 
+  "question_added": "What languages are officially spoken in Cameroon?", 
+  "questions": [
+    {
+      "answer": "Tom Cruise", 
+      "category": 5, 
+      "difficulty": 4, 
+      "id": 4, 
+      "question": "What actor did author Anne Rice first denounce, then praise in the role of her beloved Lestat?"
+    }, 
+    {
+      "answer": "Maya Angelou", 
+      "category": 4, 
+      "difficulty": 2, 
+      "id": 5, 
+      "question": "Whose autobiography is entitled 'I Know Why the Caged Bird Sings'?"
+    }, 
+    {
+      "answer": "Edward Scissorhands", 
+      "category": 5, 
+      "difficulty": 3, 
+      "id": 6, 
+      "question": "What was the title of the 1990 fantasy directed by Tim Burton about a young man with multi-bladed appendages?"
+    }, 
+    {
+      "answer": "Muhammad Ali", 
+      "category": 4, 
+      "difficulty": 1, 
+      "id": 9, 
+      "question": "What boxer's original name is Cassius Clay?"
+    }, 
+    {
+      "answer": "Brazil", 
+      "category": 6, 
+      "difficulty": 3, 
+      "id": 10, 
+      "question": "Which is the only team to play in every soccer World Cup tournament?"
+    }, 
+    {
+      "answer": "George Washington Carver", 
+      "category": 4, 
+      "difficulty": 2, 
+      "id": 12, 
+      "question": "Who invented Peanut Butter?"
+    }, 
+    {
+      "answer": "Lake Victoria", 
+      "category": 3, 
+      "difficulty": 2, 
+      "id": 13, 
+      "question": "What is the largest lake in Africa?"
+    }, 
+    {
+      "answer": "The Palace of Versailles", 
+      "category": 3, 
+      "difficulty": 3, 
+      "id": 14, 
+      "question": "In which royal palace would you find the Hall of Mirrors?"
+    }, 
+    {
+      "answer": "Agra", 
+      "category": 3, 
+      "difficulty": 2, 
+      "id": 15, 
+      "question": "The Taj Mahal is located in which Indian city?"
+    }, 
+    {
+      "answer": "Escher", 
+      "category": 2, 
+      "difficulty": 1, 
+      "id": 16, 
+      "question": "Which Dutch graphic artist\u2013initials M C was a creator of optical illusions?"
+    }
+  ], 
+  "success": true, 
+  "total_questions": 125
+}
 
   ```
 
@@ -390,7 +465,7 @@ ___
 }
 
 
->`**POST/quizzes**`
+>`##POST/quizzes`
 
   - Description:
     - Fun quizzes where previous question and category is taken and a random question is returned within same category
