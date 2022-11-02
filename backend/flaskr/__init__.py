@@ -179,20 +179,7 @@ def create_app(test_config=None):
                     abort(404)
                 
                
-            current_question = paginate_questions(request, selection)
-            total_quesitons = len(selection.all())
-            return jsonify(
-                    {
-                        "success": True,
-                        "questions": current_question,
-                        "total_questions": total_quesitons,
-                    }
-                )
-
-        else:
-
-            if ((new_question is None) or (new_answer is None) or (new_category is None) or (new_difficulty is None)):
-                abort (422)
+        else:    
 
             try:
                 question = Question(question=new_question, answer=new_answer,category=new_category,difficulty=new_difficulty)
@@ -202,16 +189,17 @@ def create_app(test_config=None):
                 current_question = paginate_questions(request, selection)
                 total_quesitons = len(Question.query.all())
                 return jsonify(
-                    {
-                        "success": True,
-                        "created": question.id,
-                        "question_added": question.question,
-                        "questions": current_question,
-                        "total_questions": total_quesitons,
-                    }
-                )
+                        {
+                            "success": True,
+                            "created": question.id,
+                            "question_added": question.question,
+                            "questions": current_question,
+                            "total_questions": total_quesitons,
+                        }
+                        )
+                    
             except:
-                abort(422)
+                    abort(422)
                 
         
     """
@@ -236,7 +224,7 @@ def create_app(test_config=None):
         if (len(selection)== 0 ) or selection is None:
             return jsonify({
                 "success": True,
-                "questions": [],
+                "questions": "Empty",
                 "error": 404,
                 "total_questions": total_questions
             })
