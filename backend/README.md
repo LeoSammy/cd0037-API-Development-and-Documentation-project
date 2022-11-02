@@ -94,7 +94,7 @@ ___
 
 ### Endpoints
 
-> ##`GET/categories`
+> **GET/categories**
 
   - Description:
     - Displays a list of categories of 10 questions per page
@@ -116,7 +116,7 @@ ___
      }
   ```
 
->`**GET/questions**`
+> **GET/questions**
 
   - Description:
     - Displays a list of questions paginated to 10 questions per page and showing current category,
@@ -213,7 +213,7 @@ ___
   ```
 
 
-> `**DELETE/questions/{question_id}**`
+> **DELETE/questions/{question_id}**
 
   - Description:
     - Deletes question with respective id from database if at all it exists
@@ -304,7 +304,7 @@ ___
   ```
 
 
->`**POST/questions**`
+> **POST/questions**
 
   - Description:
     - Creates a new question and adds to the database which requires the question and answer text,
@@ -396,7 +396,7 @@ ___
 
   ```
 
->`**POST/search**`
+> **POST/search**
 
   - Description:
     - Searches and curates list of all questions similar to the search term.
@@ -426,7 +426,7 @@ ___
 }
   
 
->`**GET/categories/{category_id}/questions**`
+> **GET/categories/{category_id}/questions**
 
   - Description:
     - Displays a list of questions in a specific category, the success value and total questions in that category.
@@ -465,7 +465,7 @@ ___
 }
 
 
->`**POST/quizzes**`
+> **POST/quizzes**
 
   - Description:
     - Fun quizzes where previous question and category is taken and a random question is returned within same category
