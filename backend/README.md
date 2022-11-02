@@ -94,7 +94,7 @@ ___
 
 ### Endpoints
 
->`**GET/categories**`
+> ##`GET/categories`
 
   - Description:
     - Displays a list of categories of 10 questions per page
@@ -465,7 +465,7 @@ ___
 }
 
 
->`##POST/quizzes`
+>`**POST/quizzes**`
 
   - Description:
     - Fun quizzes where previous question and category is taken and a random question is returned within same category
