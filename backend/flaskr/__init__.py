@@ -1,4 +1,3 @@
-from crypt import methods
 import os
 from select import select
 from unicodedata import category
@@ -103,9 +102,9 @@ def create_app(test_config=None):
             {
               "success": True,
               "questions": questions_list,
+              "current_category": curr_category,
               "total_questions": total_questions,
               "categories": categories_avail,
-              "current_category": curr_category
             }
         )
     
@@ -159,48 +158,61 @@ def create_app(test_config=None):
     """
 
     @app.route("/questions", methods=['POST'])
-    def post_question():
+    def create_question():
         body  = request.get_json()
 
-        new_question = body.get('question', None)
-        new_answer = body.get('answer', None)
-        new_category = body.get('category', None)
-        new_difficulty= body.get('difficulty', None)
-        search = body.get('search', None)
+        new_question = body.get('question')
+        new_answer = body.get('answer')
+        new_category = body.get('category')
+        new_difficulty= body.get('difficulty')
+        
+        search_term = body.get('searchTerm')
 
-        try:
-            if search:
-                selection = Question.query.order_by(Question.id).filter(Question.question.ilike("%{}%".format(search)))
-                current_question = paginate_questions(request, selection)
-                total_quesitons = len(selection.all())
+       
 
-                return jsonify(
+            #check if search_term is already present in database
+        if search_term:
+
+            selection = Question.query.order_by(Question.id).filter(Question.question.ilike("%{}%".format(search_term)))
+
+            if (len(selection) == 0):
+                    abort(404)
+                
+               
+            current_question = paginate_questions(request, selection)
+            total_quesitons = len(selection.all())
+            return jsonify(
                     {
                         "success": True,
                         "questions": current_question,
                         "total_questions": total_quesitons,
                     }
                 )
-            else:
+
+        else:
+
+            if ((new_question is None) or (new_answer is None) or (new_category is None) or (new_difficulty is None)):
+                abort (422)
+
+            try:
                 question = Question(question=new_question, answer=new_answer,category=new_category,difficulty=new_difficulty)
                 question.insert()
 
                 selection = Question.query.order_by(Question.id).all()
                 current_question = paginate_questions(request, selection)
                 total_quesitons = len(Question.query.all())
-
                 return jsonify(
                     {
                         "success": True,
                         "created": question.id,
+                        "question_added": question.question,
                         "questions": current_question,
                         "total_questions": total_quesitons,
                     }
                 )
-
-        except:
-            abort(422)
-
+            except:
+                abort(422)
+                
         
     """
     @TODO:
@@ -217,12 +229,17 @@ def create_app(test_config=None):
     def find_questions():
         body = request.get_json()
         
-        search_term = body.get('searchTerm')
-        selection = Question.query.filter(Question.question.ilike(f"%{search_term}%").all())
+        search_term = body.get("searchTerm")
+        selection = Question.query.filter(Question.question.ilike(f"%{search_term}%")).all()
         total_questions = len(selection)
 
-        if (len(selection)== 0):
-            abort(404)
+        if (len(selection)== 0 ) or selection is None:
+            return jsonify({
+                "success": True,
+                "questions": [],
+                "error": 404,
+                "total_questions": total_questions
+            })
 
         if selection:
             current_question_list = paginate_questions(request, selection)
@@ -278,13 +295,13 @@ def create_app(test_config=None):
 
         #load the given request body
         body = request.get_json()
+         #get category of question
+        quiz_category = body.get("quiz_category")
         #get the previous question from request
         previous_questions = body.get("previous_questions")
-        #get category of question
-        quiz_category = body.get("quiz_category")
        
 
-        if not quiz_category or (previous_questions == None):
+        if (quiz_category == None) or (previous_questions == None):
             abort(404)
 
         try:
@@ -298,25 +315,25 @@ def create_app(test_config=None):
             
             #total questions listed
             total_questions = len(question_list)
+            print("Formatted questions",formated_questions)
         
             #get a randon question
-            def random_question():
-                return question_list[random.randrange(0, total_questions,1)]
+            random_question = random.randrange(0,total_questions,1)
 
             for question in formated_questions:
                 if question['id'] in previous_questions:
-                    return jsonify({
-                    "message": "question already used"
-                })
+                   return jsonify({
+                    "message":"Question already checked"
+                   })
+                    
+                else:
+                    checked_question_list = formated_questions[random_question]
+                    print("Checked question list", checked_question_list)
 
-                
-            else:
-                checked_question_list = formated_questions[random_question]
 
             if (len(previous_questions) == total_questions):
-                return jsonify({
-                "success":True
-            })
+                return jsonify({"success":True
+                                            })
 
             return jsonify({
             "success":True,
@@ -362,13 +379,6 @@ def create_app(test_config=None):
             'message': 'Unprocessable'
         }), 422
 
-    @app.errorhandler(500)
-    def internal_server_error(error):
-        return jsonify({
-            "success": False,
-            'error': 500,
-            "message": "Internal server error"
-        }), 500
 
     return app
 
